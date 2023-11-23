@@ -1,4 +1,7 @@
 ## Slambook2
+Cheat sheet:
+![cheatsheet](figures\cheatsheet.png)
+
 ![titlepage](./figures/title.png)
 
 Welcome to Slambook 2nd Edition! This is the codebase of our book. Here are some relavant links if you need them: 
