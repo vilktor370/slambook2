@@ -7,14 +7,16 @@
 using namespace std;
 using namespace cv;
 
-int main(int argc, char **argv) {
-  if (argc != 3) {
+int main(int argc, char **argv)
+{
+  if (argc != 3)
+  {
     cout << "usage: feature_extraction img1 img2" << endl;
     return 1;
   }
   //-- 读取图像
-  Mat img_1 = imread(argv[1], CV_LOAD_IMAGE_COLOR);
-  Mat img_2 = imread(argv[2], CV_LOAD_IMAGE_COLOR);
+  Mat img_1 = imread(argv[1]);
+  Mat img_2 = imread(argv[2]);
   assert(img_1.data != nullptr && img_2.data != nullptr);
 
   //-- 初始化
@@ -28,6 +30,9 @@ int main(int argc, char **argv) {
   chrono::steady_clock::time_point t1 = chrono::steady_clock::now();
   detector->detect(img_1, keypoints_1);
   detector->detect(img_2, keypoints_2);
+
+  cout << "Length of keypoints_1: " << keypoints_1.size() << endl;
+  cout << "Length of keypoints_2: " << keypoints_2.size() << endl;
 
   //-- 第二步:根据角点位置计算 BRIEF 描述子
   descriptor->compute(img_1, keypoints_1, descriptors_1);
@@ -51,17 +56,20 @@ int main(int argc, char **argv) {
   //-- 第四步:匹配点对筛选
   // 计算最小距离和最大距离
   auto min_max = minmax_element(matches.begin(), matches.end(),
-                                [](const DMatch &m1, const DMatch &m2) { return m1.distance < m2.distance; });
+                                [](const DMatch &m1, const DMatch &m2)
+                                { return m1.distance < m2.distance; });
   double min_dist = min_max.first->distance;
   double max_dist = min_max.second->distance;
 
   printf("-- Max dist : %f \n", max_dist);
   printf("-- Min dist : %f \n", min_dist);
 
-  //当描述子之间的距离大于两倍的最小距离时,即认为匹配有误.但有时候最小距离会非常小,设置一个经验值30作为下限.
+  // 当描述子之间的距离大于两倍的最小距离时,即认为匹配有误.但有时候最小距离会非常小,设置一个经验值30作为下限.
   std::vector<DMatch> good_matches;
-  for (int i = 0; i < descriptors_1.rows; i++) {
-    if (matches[i].distance <= max(2 * min_dist, 30.0)) {
+  for (int i = 0; i < descriptors_1.rows; i++)
+  {
+    if (matches[i].distance <= max(2 * min_dist, 50.0))
+    {
       good_matches.push_back(matches[i]);
     }
   }

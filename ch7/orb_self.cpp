@@ -4,7 +4,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <string>
-#include <nmmintrin.h>
+// #include <nmmintrin.h>
 #include <chrono>
 
 using namespace std;
