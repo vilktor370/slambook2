@@ -3,8 +3,8 @@ project(myslam)
 
 set(CMAKE_BUILD_TYPE Release)
 
-set(CMAKE_CXX_FLAGS "-std=c++11 -Wall")
-set(CMAKE_CXX_FLAGS_RELEASE  "-std=c++11 -O3 -fopenmp -pthread")
+set(CMAKE_CXX_FLAGS "-std=c++14 -w")
+set(CMAKE_CXX_FLAGS_RELEASE  "-std=c++14 -O3 -fopenmp -pthread")
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
@@ -15,7 +15,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 include_directories("/usr/include/eigen3")
 
 # OpenCV
-find_package(OpenCV 3.1 REQUIRED)
+find_package(OpenCV 4 REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 # pangolin
@@ -62,6 +62,6 @@ enable_testing()
 
 ############### source and test ######################
 include_directories(${PROJECT_SOURCE_DIR}/include)
-add_subdirectory(src)
+# add_subdirectory(src)
 add_subdirectory(test)
-add_subdirectory(app)
+# add_subdirectory(app)
