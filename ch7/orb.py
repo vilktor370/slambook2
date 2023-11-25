@@ -10,8 +10,6 @@ def orb(img):
     kp, des = orb.compute(img, kp)
     return kp, des
 
-
-
 img1 = cv.imread('1.png')
 img2 = cv.imread('2.png')
 if img1 is None or img2 is None:
@@ -34,9 +32,6 @@ for m in matches:
     if m.distance <= max(2 * min_distance, 30):
         good_match.append(m)
 print("Number of matches:", len(good_match))
-# outImg = cv.drawMatches(img1, keypoint1, img2, keypoint2, good_match, None)
-# cv.imshow('image', outImg)
-# cv.waitKey(0)
 
 # filter out useful point for essential matrix, fundemental matrix and homography
 point1 = []
@@ -64,7 +59,7 @@ essential_matrix = cv.findEssentialMat(point1, point2, K)[0]
 print("Essential matrix:\n", essential_matrix)
 
 # find homography
-homography_matrix = cv.findHomography(point1, point2, cv.RANSAC, 2)[0]
+homography_matrix = cv.findHomography(point1, point2, cv.RANSAC, 5)[0]
 print("Homography matrix:\n", homography_matrix)
 ones = np.ones((point1.shape[0], 1))
 point1_h = np.hstack([point1, ones])
@@ -94,11 +89,21 @@ x1 = np.linalg.inv(K).dot(point1_h.T)
 x2 = np.linalg.inv(K).dot(point2_h.T)
 N = x1.shape[1]
 for i in range(N):
-    X1 = x1.T[i, :]
-    X2 = x2.T[i, :]
+    X1 = x1.T[i]
+    X2 = x2.T[i]
     res = X2.T.dot(t_hat.dot(R1)).dot(X1)
     print(res)
-# decompose homography matrix
-print("--------------------homography-------------------------")
-num, Rs, Ts, Ns = cv.decomposeHomographyMat(homography_matrix, K)
-# print(num)
+
+calc_essential_matrix = t_hat.dot(R1)
+print('Essential matrix fit error:', np.linalg.norm(essential_matrix - calc_essential_matrix))
+calc_fundamental_matrix = np.linalg.inv(K.T).dot(t_hat.dot(R1)).dot(np.linalg.inv(K))
+print("Fundamental matrix fit error:",np.linalg.norm(fundemental_matrix - calc_fundamental_matrix) )
+
+# verify homography matrix
+for i in matches:
+    X1 = np.array([keypoint1[i.queryIdx].pt[0], keypoint1[i.queryIdx].pt[1], 1.0])
+    X2 = np.array([keypoint1[i.trainIdx].pt[0], keypoint1[i.trainIdx].pt[1], 1.0])
+    calc_X1 = homography_matrix.dot(X2)
+    calc_X1 /= calc_X1[-1]
+    fit_error = np.linalg.norm(X1[:-1] - calc_X1[:-1])
+    print(fit_error)
