@@ -107,3 +107,12 @@ for i in matches:
     calc_X1 /= calc_X1[-1]
     fit_error = np.linalg.norm(X1[:-1] - calc_X1[:-1])
     print(fit_error)
+
+# triangulation
+x1 = np.linalg.inv(K).dot(point1_h.T)
+x2 = np.linalg.inv(K).dot(point2_h.T)
+T1 = np.hstack([np.eye(3), np.zeros((3,1))])
+T2 = np.hstack([R1, t[:, None]])
+pts_3d = cv.triangulatePoints(T1, T2, x1[:-1, :], x2[:-1, :])
+pts_3d = pts_3d.T/pts_3d.T[:, -1][:, None]
+print(pts_3d)
