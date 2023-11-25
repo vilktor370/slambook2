@@ -1,6 +1,6 @@
 ## Slambook2
 Cheat sheet:
-![cheatsheet](figures\cheatsheet.png)
+![cheatsheet](./figures/cheatsheet.png)
 
 ![titlepage](./figures/title.png)
 
