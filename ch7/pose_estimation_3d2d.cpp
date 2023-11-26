@@ -89,6 +89,7 @@ int main(int argc, char **argv) {
   cout << "R=" << endl << R << endl;
   cout << "t=" << endl << t << endl;
 
+
   VecVector3d pts_3d_eigen;
   VecVector2d pts_2d_eigen;
   for (size_t i = 0; i < pts_3d.size(); ++i) {
